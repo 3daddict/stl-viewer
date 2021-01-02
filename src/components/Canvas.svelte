@@ -113,6 +113,7 @@
       });
 
       var mesh = new THREE.Mesh(geometry, material);
+      mesh.name = "loadedMeshObject";
       mesh.castShadow = true;
       mesh.receiveShadow = true;
 
@@ -156,6 +157,25 @@
   function signedVolumeOfTriangle(p1, p2, p3) {
     return p1.dot(p2.cross(p3)) / 6.0;
   }
+
+  // Clear file input
+  function clearFileInput(ctrl) {
+    try {
+      ctrl.value = null;
+    } catch (ex) {}
+    if (ctrl.value) {
+      ctrl.parentNode.replaceChild(ctrl.cloneNode(true), ctrl);
+    }
+  }
+
+  // Rest the Scene and clear file
+  function resetScene() {
+    const object = scene.getObjectByName("loadedMeshObject");
+    stlSize = { x: 0, y: 0, z: 0 };
+    stlVolume = 0.0;
+    scene.remove(object);
+    clearFileInput(fileinput);
+  }
 </script>
 
 <style>
@@ -191,7 +211,7 @@
           bind:this={fileinput} />
       </form>
       <div>
-        <button>Reset</button>
+        <button on:click={resetScene}>Reset</button>
       </div>
       <div class="info-container">
         <p>
